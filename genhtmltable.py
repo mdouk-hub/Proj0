@@ -6,31 +6,41 @@ from sqlalchemy.orm import sessionmaker
 
 def main():
 
+    out = '<!DOCTYPE html><html lang="en">'
+    out += '<head>'
+    out += '<meta charset="utf-8">'
+    out += '<title>Links</title>'
+    out += '<link href="style.css" rel="stylesheet" type="text/css">'
+    out += '</head>'
+    out += '<body><table><thead><tr>'
+    out += '<th>Id</th>'
+    out += '<th>Name</th>'
+    out += '<th>Goto</th>'
+    out += '<th>Topic</th>'
+    out += '</tr></thead>'
+
     engine = create_engine('sqlite:///url.db', echo=True)
     Base.metadata.bind = engine
     DBSession = sessionmaker()
     DBSession.configure(bind=engine)
     session = DBSession()
     items = session.query(Link).all()
+
+    out += '<tbody>'
+    for item in items:
+        out += '<tr><td>'
+        out += str(item.id)
+        out += '</td><td>'
+        out += str(item.name)
+        out += '</td><td>'
+        out += str(item.goto)
+        out += '</td><td>'
+        out += str(item.topic)
+        out += '</td></tr>'
+    out += '</tbody></table></body></html>'
+    
     with open('index.html', 'w') as file:
-        link = '<table><thead><tr>'
-        link += '<th>Id</th>'
-        link += '<th>Name</th>'
-        link += '<th>Goto</th>'
-        link += '<th>Topic</th>'
-        link += '</tr></thead><tbody>'
-        for item in items:
-            link += '<tr><td>'
-            link += str(item.id)
-            link += '</td><td>'
-            link += str(item.name)
-            link += '</td><td>'
-            link += str(item.goto)
-            link += '</td><td>'
-            link += str(item.topic)
-            link += '</td></tr>'
-        link += '</tbody></table>'
-        file.write(link)
+        file.write(out)
     print('WebPage successfully created.')
 
 
