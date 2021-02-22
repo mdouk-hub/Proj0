@@ -12,16 +12,17 @@ def main():
     DBSession.configure(bind=engine)
     session = DBSession()
     items = session.query(Link).all()
+    
     with open('index.html', 'w') as file:
-        link = '<ul>'
+        out = '<ul>'
         for item in items:
-            link += '<li><a href="'
-            link += item.goto
-            link += '">'
-            link += item.name
-            link += '</a></li>'
-        link += '</ul>'
-        file.write(link)
+            out += '<li><a href="'
+            out += item.goto
+            out += '">'
+            out += item.name
+            out += '</a></li>'
+        out += '</ul>'
+        file.write(out)
     print('WebPage successfully created.')
 
 
